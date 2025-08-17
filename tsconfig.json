@@ -1,0 +1,17 @@
+// In your tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "baseUrl": ".",
+    "outDir": "./build",      // Output directory for compiled JS
+    "rootDir": "./src",       // <-- Change this to ./src
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"], // <-- Change this to src/**/*.ts
+  "exclude": ["node_modules", "build"]
+}
