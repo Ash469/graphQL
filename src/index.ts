@@ -2,6 +2,7 @@ import express from 'express';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express5';
 import bodyParser from 'body-parser';
+import prisma from './lib/db.js';
 // import cors from 'cors';
 
 async function init() {
@@ -18,12 +19,38 @@ async function init() {
         hello: String
         say(name: String!): String
       }
+      type Mutation {
+        createUser(firstName: String!, lastName: String!, email: String!, password: String!): Boolean!
+      }
+      type User {
+        id: ID!
+        firstName: String!
+        lastName: String!
+        email: String!
+        password: String!
+      }
     `,
     //actual functions for graphql
     resolvers: {
       Query: {
         hello: () => 'Hello from GraphQL Server!',
         say: (_, { name }) => `Hello, ${name}!`
+      },
+      Mutation:{
+        createUser: async (_, { firstName, lastName, email, password }:{
+          firstName:string;lastName:string;email:string;password:string;
+        }) => {
+          await prisma.user.create({
+            data: {
+              firstName,
+              lastName,
+              email,
+              password,
+              salt: 'random_salt_value' // In a real application, ensure to hash the password before storing it
+            },
+          });
+          return true;
+        }
       }
     }
   });
